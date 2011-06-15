@@ -69,7 +69,7 @@ class Date {
 
 	function set_now() { $this->date = time(); }
 
-	function get_format($format) {
+	function get_format($format, $html = false) {
 		if ( is_null( $this->date) ) { return null; }
 		$date = date( $format, $this->date );
 		if (substr_count($format, "F") > 0) {
@@ -88,6 +88,7 @@ class Date {
 			$days = Array( 0 => "Dom", 1 => "Lun", 2 => "Mar", 3 => "Mié", 4 => "Jue", 5 => "Vie", 6 => "Sáb");
 			$date = str_ireplace(date("D", $this->date), $days[date("w", $this->date)], $date);
 		}
+		if ($html) $date = htmlentities($date);
 		return $date;
 	}
 
@@ -196,7 +197,7 @@ class Date {
 
 	private function extract_from_seconds(&$seconds, $interval) {
 	    switch ($interval) {
-			case "minutes": case "minutes": case "minutes": case "i":
+			case "minutes": case "minute": case "i":
 			    $value   = bcdiv($seconds,60);
 			    $seconds = bcmod($seconds,60);
 			    break;

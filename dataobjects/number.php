@@ -39,7 +39,7 @@ class Number {
 	function get_oct() { return is_null($this->number) ? null : decoct( $this->number ); }
 	function get_bin() { return is_null($this->number) ? null : decbin( $this->number ); }
 	function get_ip() { return is_null($this->number) ? null : long2ip( $this->number ); }
-	function get_format($decimals = 2, $decimals_sep = '.', $thousands_sep = '') { is_null($this->number) ? null : number_format( $this->number, $decimals, $decimals_sep, $thousands_sep ); }
+	function get_format($decimals = 2, $decimals_sep = '.', $thousands_sep = '') { return is_null($this->number) ? null : number_format( $this->number, $decimals, $decimals_sep, $thousands_sep ); }
 	function get_mask($lenght, $mask = "0") { return is_null($this->number) ? null : sprintf("%'{$mask}{$lenght}s", $this->number); }
 
 	function set_random($min = 0, $max = RAND_MAX) { $this->number = mt_rand( $min, $max ); }

@@ -160,14 +160,7 @@ class Model {
 	function param_get_sql($param) {
 		global $f;
 		if (! isset($this->params[$param])) { return false; }
-		if (is_array($this->params[$param])) {
-			foreach ($this->params[$param] as $i=>$val) {
-				$this->params[$param][$i] = $f->database->get_quoted( $f->database->get_escaped( $val ) );
-			}
-			$param = "(" . implode(", ", $this->params[$param]) . ")";
-		} else {
-			$param = $f->database->get_quoted( $f->database->get_escaped( $this->params[$param] ) );
-		}
+		$param = $f->database->get_quoted( $f->database->get_escaped( $this->params[$param] ) );
 		return $param;
 	}
 

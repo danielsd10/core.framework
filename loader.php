@@ -4,13 +4,15 @@
  * @package framework
  * Cargador de objetos del framework
  * @author DSD
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 class Loader {
 
 	function config() {
-		$this->config = new Config;
+		global $f;
+		$config_file = DIR_BASE.DS."lite.framework.config";
+		$f->config = new Config( $config_file );
 	}
 
 	function controller() {
@@ -18,18 +20,19 @@ class Loader {
 		require_once( DIR_FRAMEWORK.DS.'controller.php' );
 		require_once( DIR_FRAMEWORK.DS.'model.php' );
 		require_once( DIR_FRAMEWORK.DS.'table.php' );
+		require_once( DIR_FRAMEWORK.DS.'procedure.php' );
 		require_once( DIR_FRAMEWORK.DS.'dataobject.php' );
 
-		$f->config->template = new Config;
-		$f->config->template->get_config( 'template' );
+		//$f->config->template = new Config;
+		//$f->config->template->get_config( 'template' );
 
 		// cargar variables GET y POST
 		$f->request = $_REQUEST;
 		// cargar archivos
 		$f->uploads = $_FILES;
 
-		$f->config->url = new Config;
-		$f->config->url->get_config( 'url' );
+		//$f->config->url = new Config;
+		//$f->config->url->get_config( 'url' );
 		$f->config->url->uri = $_SERVER['REQUEST_URI'];
 		$f->config->url->query = $_SERVER['QUERY_STRING'];
 		$f->config->url->base = "http://" . $_SERVER['HTTP_HOST'] . "/" . $f->config->url->dir;
@@ -101,19 +104,18 @@ class Loader {
 
 	function database() {
 		global $f;
-		$this->config->database = new Config;
-		$this->config->database->get_config( 'database' );
+		//$this->config->database = new Config;
+		//this->config->database->get_config( 'database' );
 
 		require_once( DIR_FRAMEWORK.DS.'database.php' );
 		$db_class = "Database";
-		if ( $this->config->database->driver ) {
-			if ( file_exists( DIR_FRAMEWORK.DS."database/{$this->config->database->driver}.php" ) ) {
-
-				require_once( DIR_FRAMEWORK.DS."database/{$this->config->database->driver}.php" );
-				$db_class = "Database_{$this->config->database->driver}";
+		if ( $f->config->database->driver ) {
+			if ( file_exists( DIR_FRAMEWORK.DS."database/{$f->config->database->driver}.php" ) ) {
+				require_once( DIR_FRAMEWORK.DS."database/{$f->config->database->driver}.php" );
+				$db_class = "Database_{$f->config->database->driver}";
 			}
 		}
-		$f->database = new $db_class($this->config->database);
+		$f->database = new $db_class($f->config->database);
 	}
 
 	function dataobject($name) {

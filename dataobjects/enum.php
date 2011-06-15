@@ -26,6 +26,14 @@ class Enum {
 	function get_value() { return is_null($this->key) ? null : $this->values[$this->key]; }
 
 	function get_html() { return is_null($this->key) ? null : htmlentities( $this->values[$this->key], ENT_QUOTES ); }
+	
+	function get_utf8() {
+		return (mb_detect_encoding($this->values[$this->key], "UTF-8, ISO-8859-1") == "ISO-8859-1") ? iconv("ISO-8859-1", "UTF-8", $this->values[$this->key]) : $this->values[$this->key];
+	}
+	
+	function get_latin1() {
+    return (mb_detect_encoding($this->values[$this->key], "UTF-8, ISO-8859-1") == "UTF-8") ? iconv("UTF-8", "ISO-8859-1", $this->values[$this->key]) : $this->values[$this->key];
+	}	
 
 	function get_list() {
 		$list = $this->values;

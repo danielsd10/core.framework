@@ -32,6 +32,18 @@ class String {
 		$str = nl2br( $str );
 		return $str;
 	}
+	
+	function get_encoding() {
+    return mb_detect_encoding($this->string, "UTF-8, ISO-8859-1");
+	}
+
+	function get_utf8() {
+		return (mb_detect_encoding($this->string, "UTF-8, ISO-8859-1") == "ISO-8859-1") ? iconv("ISO-8859-1", "UTF-8", $this->string) : $this->string;
+	}
+	
+	function get_latin1() {
+    return (mb_detect_encoding($this->string, "UTF-8, ISO-8859-1") == "UTF-8") ? iconv("UTF-8", "ISO-8859-1", $this->string) : $this->string;
+	}
 
 	function get_sql() {
 		global $f;

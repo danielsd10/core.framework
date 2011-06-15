@@ -4,7 +4,7 @@
  * @package framework
  * Clase de manejo de datos
  * @author DSD
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 require_once( DIR_FRAMEWORK.DS."dataobjects".DS."string.php" );
@@ -13,6 +13,7 @@ require_once( DIR_FRAMEWORK.DS."dataobjects".DS."date.php" );
 require_once( DIR_FRAMEWORK.DS."dataobjects".DS."file.php" );
 require_once( DIR_FRAMEWORK.DS."dataobjects".DS."enum.php" );
 require_once( DIR_FRAMEWORK.DS."dataobjects".DS."collection.php" );
+require_once( DIR_FRAMEWORK.DS."dataobjects".DS."binary.php" );
 
 class DataObject {
 	/**
@@ -46,7 +47,7 @@ class DataObject {
 			$properties = get_object_vars( $this );
 			foreach ($record as $k => $v) {
 				if (! property_exists($this, $k) ) { continue; }
-				if ( $this->$k instanceof String || $this->$k instanceof Number || $this->$k instanceof Date || $this->$k instanceof Enum ) {
+				if ( $this->$k instanceof String || $this->$k instanceof Number || $this->$k instanceof Date || $this->$k instanceof Enum || $this->$k instanceof Binary ) {
 					$this->$k->set( $v );
 				} elseif ( $this->$k instanceof File ) {
 					$this->$k->link( $v );
@@ -86,7 +87,7 @@ class DataObject {
 					$value = (strlen($from->$k) > 0) ? $from->$k : null;
 				} else { continue; }
 
-				if ( $this->$k instanceof String || $this->$k instanceof Number || $this->$k instanceof Date || $this->$k instanceof Enum ) {
+				if ( $this->$k instanceof String || $this->$k instanceof Number || $this->$k instanceof Date || $this->$k instanceof Enum || $this->$k instanceof Binary ) {
 					$this->$k->set( $value );
 				} elseif ( $this->$k instanceof File ) {
 					$this->$k->link( $value );

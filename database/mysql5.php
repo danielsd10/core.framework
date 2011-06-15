@@ -7,7 +7,7 @@
  * @version 1.1.1
  */
 
-class Database_mysql extends Database {
+class Database_mysql5 extends Database {
 
 	/**
 	 * Nombre del servidor de base de datos
@@ -52,9 +52,20 @@ class Database_mysql extends Database {
 	 *
 	 */
 	function connect() {
-		$this->_cn = mysql_pconnect($this->server, $this->user, $this->password) or trigger_error(mysql_error(),E_USER_ERROR);
-		mysql_select_db($this->database, $this->_cn);
-		mysql_set_charset("ISO-8859-1");
+		$this->_cn = mysqli_connect($this->server, $this->user, $this->password) or trigger_error(mysql_error(),E_USER_ERROR);
+		mysqli_select_db($this->_cn, $this->database);
+		mysqli_set_charset($this->_cn, "ISO-8859-1");
+	}
+	
+	function clear() {
+		if ( $this->_rs ) { mysqli_free_result($this->_rs); }
+		while( mysqli_more_results($this->_cn) ) {
+			if ( mysqli_next_result($this->_cn) ) {
+				$this->_rs = mysqli_use_result($this->_cn);
+				if (! $this->_rs instanceof mysqli_result ) { break; }
+				mysqli_free_result($this->_rs);
+			}
+		}
 	}
 
 	/**
@@ -65,18 +76,30 @@ class Database_mysql extends Database {
 	 */
 	function execute($query) {
 		$this->_sql = $query;
-		// echo $this->_sql . "<br>"; // QUITAR ESTA LINEA ///////////////////////////////////
-		if (! $this->_rs = mysql_query($this->_sql, $this->_cn)) { return false; } //trigger_error(mysql_error(), E_USER_ERROR);
-		return $this->_rs;
+		//echo $this->_sql . "<br>"; // QUITAR ESTA LINEA ///////////////////////////////////return false; } //
+		$this->clear();
+		if (! mysqli_real_query($this->_cn, $this->_sql)) { trigger_error(mysqli_error($this->_cn), E_USER_ERROR); }
+		if ( mysqli_field_count($this->_cn) ) {
+			$this->_rs = mysqli_store_result($this->_cn);
+			return $this->_rs;
+		} else {
+			return true;
+		}
 	}
 
+	function next_result() {
+		if (! mysqli_next_result($this->_cn) ) { return false; }
+		$this->_rs = mysqli_store_result($this->_cn);
+		return $this->_rs;
+	}
+	
 	/**
 	 * Devuelve un registro del resultset activo
 	 *
 	 * @return object
 	 */
 	function get_record() {
-		return mysql_fetch_object($this->_rs);
+		return mysqli_fetch_object($this->_rs);
 	}
 
 	/**
@@ -85,7 +108,7 @@ class Database_mysql extends Database {
 	 * @return int
 	 */
 	function total_records() {
-		return mysql_affected_rows($this->_cn);
+		return mysqli_num_rows($this->_rs);
 	}
 
 	/**
@@ -94,7 +117,7 @@ class Database_mysql extends Database {
 	 * @return int
 	 */
 	function get_newid() {
-		return mysql_insert_id( $this->_cn );
+		return mysqli_insert_id($this->_cn);
 	}
 
 	/**
@@ -105,7 +128,7 @@ class Database_mysql extends Database {
 	 */
 	function get_escaped( $value ) {
 		$value = get_magic_quotes_gpc() ? stripslashes($value) : $value;
-		$value = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($value) : mysql_escape_string($value);
+		$value = function_exists("mysqli_escape_string") ? mysqli_escape_string($this->_cn, $value) : mysql_escape_string($value);
 		return $value;
 	}
 
@@ -179,6 +202,19 @@ class Database_mysql extends Database {
 			$pm_flds[] = $f . '=' . $v;
 		}
 		$query = sprintf( $fmtsql, implode( " AND ", $pm_flds ) ) ;
+		if (! $this->execute($query) ) { return false; }
+		return true;
+	}
+	
+	/** Ejecuta una sentencia Call (procedimiento almacenado)
+	 *
+	 * @param string $table nombre de tabla
+	 * @param mixed $fields objeto o array con campos y valores
+	 * @param mixed $params objeto o array con parametros (where...)
+	 */
+	function execute_call( $procedure, $params ) {
+		$fmtsql = "CALL {$procedure}(%s)";
+		$query = sprintf( $fmtsql, implode( ", ", $params ) ) ;
 		if (! $this->execute($query) ) { return false; }
 		return true;
 	}

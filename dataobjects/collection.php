@@ -93,6 +93,14 @@ class Collection {
 			return $this->items[ $index ];
 		}
 	}
+	
+	function find( $property, $value, $func = 'get' ) {
+		if (! property_exists($this->object_type, $property) ) { return false; }
+		foreach ( $this->items as $item ) {
+			if ( $item->$property->$func() == $value ) { return $item; }
+		}
+		return false;
+	}
 
 	function items() { return $this->items; }
 

@@ -4,7 +4,7 @@
  * @package framework
  * Tabla para envío de datos a base de datos
  * @author DSD
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 class Table {
@@ -58,7 +58,8 @@ class Table {
 	 */
 	function add_keys( $keys = array() ) {
 		if ( is_array( $keys ) ) {
-			$this->keys = $keys;
+			$this->keys = array_merge($this->keys, $keys);
+			//$this->keys = $keys;
 		}
 	}
 
@@ -94,8 +95,9 @@ class Table {
 	 */
 	function add_fields( $fields = array() ) {
 		if ( is_array( $fields ) ) {
-			$this->fields = $fields;
+			$this->fields = array_merge($this->fields, $fields);
+			//$this->fields = $fields;
 		}
 	}
-
 }
+?>

@@ -9,6 +9,13 @@
 
 class Config {
 	/**
+	 * Ruta de archivo de configuración
+	 *
+	 * @var string
+	 */
+	private $_config_file;
+	
+	/**
 	 * Configuración de base de datos
 	 *
 	 * @var Config_database
@@ -29,17 +36,49 @@ class Config {
 	 */
 	public $template;
 
+	function __construct( $config_file ) {
+		$this->_config_file = $config_file;
+		$this->get_config();
+	}
+	
 	/**
-	 * Carga la configuración desde un archivo externo (*.cfg)
+	 * Carga la configuración desde un archivo externo
 	 *
 	 * @param Config_template $file nombre del archivo de configuración
 	 */
-	function get_config($file) {
-		$vars = parse_ini_file( "config/$file.cfg" );
-		foreach ($vars as $k => $v) {
-			$this->$k = $v;
+	function get_config() {
+		$properties = get_object_vars($this);
+		foreach ($properties as $property => $value) {
+			if ($property{0} == "_") { continue; }
+			$class_name = "Config_" . $property;
+			$this->$property = new $class_name;
+			$vars = parse_ini_file(  $this->_config_file, $property );
+			foreach ($vars[$property] as $k => $v) {
+				$this->$property->$k = $v;
+			}
 		}
 	}
 }
 
+class Config_database {
+	public $driver;
+	public $server;
+	public $port;
+	public $user;
+	public $password;
+	public $database;
+}
+
+class Config_template {
+	public $name;
+}
+
+class Config_url {
+	public $dir;
+	public $index;
+	public $default;
+	public $base;
+	public $uri;
+	public $query;
+}
 ?>
