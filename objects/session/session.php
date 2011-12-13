@@ -16,18 +16,18 @@ class Session {
 	
 	public $mode;
 	
-	public function _open($path, $name) {
+	public static function _open($path, $name) {
 		//$this->db->connect();
 		$Application = Application::getInstance();
 		self::$db = $Application->datastore;
 		self::$session_table = $Application->config('session', 'storage-table');
 	}
 	
-	public function _close() {
+	public static function _close() {
 		//$this->db->close();
 	}
 	
-	public function _read($id) {
+	public static function _read($id) {
 		//$this->db->query($sql);
 		$rs = self::$db->query("select data from " . self::$session_table . " where id = " . sql::parse($id));
 		if ($rs->rowCount > 0) {
@@ -37,19 +37,19 @@ class Session {
 		}
 	}
 	
-	public function _write($id, $data) {
+	public static function _write($id, $data) {
 		$response = self::$db->execute( sprintf("replace into %s (id, access, data) values (%s, %s, %s)",
 			self::$session_table, sql::parse($id), time(), sql::parse($data)));
 		//$response = self::$db->execute("update " . self::$session_table . " set data = " . sql::parse($data) . " where id = " . sql::parse($id));
 		return $response['success'];
 	}
 	
-	public function _destroy($id) {
+	public static function _destroy($id) {
 		$response = self::$db->execute("delete from " . self::$session_table . " where id = " . sql::parse($id));
 		return $response['success'];
 	}
 	
-	public function _gc($max) {
+	public static function _gc($max) {
 		$old = time() - $max;
 		$response = self::$db->execute("delete from " . self::$session_table . " where access < " . sql::parse($old));
 		return $response['success'];
