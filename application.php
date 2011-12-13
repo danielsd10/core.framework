@@ -230,6 +230,8 @@ final class Application {
 				include_once( $libpath . 'trace/trace.php');
 				return Trace::getInstance();
 			case 'pdf':
+				include_once( $libpath . 'pdf/pdf.php');
+				break;
 			case 'webservice':
 			case 'excel':
 			default: throw Application::Exception('App004', array($LibraryName));
