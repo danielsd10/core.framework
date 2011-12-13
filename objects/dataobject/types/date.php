@@ -44,13 +44,13 @@ abstract class Date {
 		return $date;
 	}
 
-	public function date($date) {
+	public static function fdate($date) {
 		if ( is_null($date) ) { return null; }
 		if (! is_integer($date)) { $date = self::parse_date($date, self::datetime); }
 		return date("Y-m-d", $date);
 	}
 
-	public static function time($date) {
+	public static function ftime($date) {
 		if ( is_null($date) ) { return null; }
 		if (! is_integer($date)) { $date = self::parse_date($date, self::datetime); }
 		return date("H:i:s", $date);
@@ -128,7 +128,7 @@ abstract class Date {
 		return $str_date;
 	}
 
-	private function parse_date( $str, $mode ) {
+	private function parse_date( $str, $mode=self::datetime ) {
 		if ( is_null($str) ) { return null; }
 		$date = array( 'year' => 0,	'month' => 0, 'day' => 0, 'hour' => 0, 'minute' => 0, 'second' => 0 );
 		$str .= "";
