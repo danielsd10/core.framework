@@ -251,16 +251,15 @@ final class Application {
 			case 'Datastore': $ClassFile = "objects/datastore/datastore.php"; break;
 			case 'Statement': $ClassFile = "objects/datastore/statement.php"; break;
 			case 'Dataset': $ClassFile = "objects/datastore/dataset.php"; break;
-			case 'sql': $ClassFile = "objects/datastore/mysql/sql.php"; break;
 			
 			case 'Controller': $ClassFile = "objects/controller/controller.php"; break;
 			case 'Model': $ClassFile = "objects/controller/model.php"; break;
 			case 'DataObject': $ClassFile = "objects/dataobject/object.php"; break;
 			case 'DataObjectCollection': $ClassFile = "objects/dataobject/collection.php"; break;
-			case 'DataObjectLink': $ClassFile = "objects/dataobject/link.php"; break;
 			
 			/* clases extendidas */
 			case 'Datastore_mysql': $ClassFile = "objects/datastore/mysql/datastore.php"; break;
+			case 'sql': $ClassFile = "objects/datastore/mysql/sql.php"; break;			
 			
 			/* clases de apoyo */
 			
@@ -271,8 +270,6 @@ final class Application {
 			case 'String': $ClassFile = "objects/dataobject/types/string.php"; break;
 			case 'Number': $ClassFile = "objects/dataobject/types/number.php"; break;
 			case 'Date': $ClassFile = "objects/dataobject/types/date.php"; break;
-			case 'Binary': $ClassFile = "objects/dataobject/types/binary.php"; break;
-			case 'File': $ClassFile = "objects/dataobject/types/file.php"; break;
 			
 			/* librerías */
 			
