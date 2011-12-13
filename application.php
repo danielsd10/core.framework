@@ -232,6 +232,9 @@ final class Application {
 			case 'pdf':
 				include_once( $libpath . 'pdf/pdf.php');
 				break;
+			case 'upload':
+				include_once( $libpath . 'upload/upload.php');
+				break;
 			case 'webservice':
 			case 'excel':
 			default: throw Application::Exception('App004', array($LibraryName));
