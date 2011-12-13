@@ -100,6 +100,11 @@ class Response {
 		header("Location: " . $location);
 	}
 	
+	public function forbidden( $message ) {
+		header("HTTP/1.1 403 Forbidden");
+		header("Location: " . Application::getInstance()->request->root);
+	}
+	
 	public function header($name, $content) {
 		header($name . ': ' . $content);
 	}
