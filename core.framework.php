@@ -37,6 +37,9 @@ set_exception_handler(array('Application', 'handleException'));
 	array('Session', '_destroy'),
 	array('Session', '_gc'));*/
 
+//cambiar directorio de trabajo para manejo de archivos
+chdir(IndexPath);
+
 //if ( function_exists("__autoload") ) { throw new Exception('se repite __autoload'); }
 //FB::log(array(1,2));
 //FB::info('hola');

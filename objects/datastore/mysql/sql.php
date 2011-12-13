@@ -5,26 +5,7 @@
  * @version 1.2
  */
 abstract class sql implements iSQL {
-	//const quote_object = "´";
-	//const quote_string = "'";
-	//const null = null;
 	
-	/*public function escape($value) {
-		$value = get_magic_quotes_gpc() ? stripslashes($value) : $value;
-		$value = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($value) : mysql_escape_string($value);
-		
-		return $value;
-	}
-	
-	public function quote($value) {
-		return self::quote_string.$value.self::quote_string;
-	}
-	
-	public function objectQuote($object_name) {
-		return self::quote_object.$object_name.self::quote_object;
-	}*/
-	
-	/** @todo soporte para parsear blobs */
 	static public function parse($value) {
 		$Application = Application::getInstance();
 		switch (true) {
@@ -41,7 +22,13 @@ abstract class sql implements iSQL {
 				return $value;
 				break;
 			default:
-				return $Application->datastore->quote(String::latin1($value));
+				// Soporte Blob:
+				// String::latin1 devuelve cadena vacía cuando el string es binario
+				if (String::latin1($value) != '') {
+					return $Application->datastore->quote(String::latin1($value));
+				} else {
+					return $Application->datastore->quote($value);
+				}
 		}
 	}
 
