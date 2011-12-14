@@ -31,6 +31,17 @@ class File {
 					 $info = pathinfo($this->_filename);
 					 $this->properties['ext'] = isset($info['extension']) ? $info['extension'] : '';
 					break;
+				case 'mime':
+					if (function_exists('finfo_open')) {
+						$finfo = finfo_open(FILEINFO_MIME); // return mime type mimetype extension
+   						$this->properties['mime'] = finfo_file($finfo, $this->_filename);
+						finfo_close($finfo);
+					} elseif (function_exists('mime_content_type')) {
+						$this->properties['mime'] = mime_content_type($this->_filename);
+					} else {
+						$this->properties['mime'] = '';
+					}
+					break;
 				case 'size':
 					$this->properties['size'] = filesize($this->_filename);
 					break;
@@ -111,6 +122,7 @@ class File {
 			case 'name':
 			case 'dir':
 			case 'ext':
+			case 'mime':
 			case 'size':
 			case 'owner':
 			case 'mode':

@@ -46,10 +46,6 @@ class Directory {
 				
 				case 'dirs':
 					
-				case 'filecount':
-					
-				case 'dircount':
-					
 			}
 		}
 		return $this->properties[$property];
