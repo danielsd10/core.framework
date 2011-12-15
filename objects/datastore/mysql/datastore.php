@@ -81,14 +81,30 @@ class Datastore_mysql extends Datastore {
 		$flags = ( $flags != 0 ) ? $flags : $this->flags;
 		
 		$response = array();
-		if (tracing()) Trace::table(array( array('SQL'), array($sql)), 'Datastore::execute()');
-		$exec = $this->cn->exec($sql);
-		if ( $exec === false ) {
-			$response['success'] = false;
-		} else {
+		try {
+			if (tracing()) Trace::table(array( array('SQL'), array($sql)), 'Datastore::execute()');
+			$exec = $this->cn->exec($sql);
 			$response['success'] = true;
 			$response['affectedRows'] = $exec;
 			$response['lastID'] = $this->cn->lastInsertId();
+		} catch(PDOException $e) {
+			$response['success'] = false;
+			
+			// captura de error de base de datos
+			preg_match('/SQLSTATE\[(\w+)\]\: .+\: ([0-9]+) (.*)/', $e->getMessage(), $matches);
+			switch ((int) $matches[2]) {
+				// errores que no son graves y pueden ser devueltos se notifican en la respuesta
+				case 1451:
+				case 1452:
+					// integridad referencial
+					$response['lastError'] = 'Error de Integridad Referencial';
+					//echo($response['lastError']);
+					break;
+				// errores graves o no esperados generan excepción
+				default:
+					throw new Exception($matches[3], $matches[2]);
+					//$response['lastError'] = ($matches[1] == 'HY000' ? $matches[2] : $matches[1]);
+			}
 		}
 		
 		return $response;
