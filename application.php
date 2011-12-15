@@ -312,8 +312,11 @@ final class Application {
 		// interfaz común de salida de error
 		
 		// debug
-		if (tracing()) Trace::error($exception->getMessage());
-		//trigger_error($exception->getMessage(), E_USER_ERROR);
+		if (tracing()) {
+			Trace::error($exception->getMessage());
+		} else {
+			trigger_error($exception->getMessage(), E_USER_ERROR);
+		}
 	}
 	
 	public static function handleError($errno, $errstr) {
