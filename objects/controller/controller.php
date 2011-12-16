@@ -16,10 +16,10 @@ abstract class Controller {
 		if (! method_exists($this, $method) ) { throw Application::Exception('Ctr003', array(get_class($this), $method)); }
 		
 		/* ejercer seguridad según si sesión está en modo estricto */
-		$Application = Application::getInstance;
+		/*$Application = Application::getInstance;
 		if (! $Application->session->valid) {
 			$Application->response->forbidden();
-		}
+		}*/
 		
 		/* ejecutar tarea */
 		//try {

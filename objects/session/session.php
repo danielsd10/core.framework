@@ -60,6 +60,7 @@ class Session {
 		session_start();
 		$this->id = session_id();
 		if (! isset($_SESSION['valid']) ) { $_SESSION['valid'] = false; }
+		if (! isset($_SESSION['message']) ) { $_SESSION['message'] = null; }
 	}
 	
 	public function end() {

@@ -93,17 +93,20 @@ class Datastore_mysql extends Datastore {
 			// captura de error de base de datos
 			preg_match('/SQLSTATE\[(\w+)\]\: .+\: ([0-9]+) (.*)/', $e->getMessage(), $matches);
 			switch ((int) $matches[2]) {
-				// errores que no son graves y pueden ser devueltos se notifican en la respuesta
+				// errores que requieren ser capturados para un mensaje de notificación personalizado
 				case 1451:
 				case 1452:
 					// integridad referencial
-					$response['lastError'] = 'Error de Integridad Referencial';
+					//$response['lastError'] = (int) $matches[2];
+					$response['lastError'] = 'Dst200';
+					//$Application = Application::getInstance();
+					//$Application->response->throw();
 					//echo($response['lastError']);
 					break;
 				// errores graves o no esperados generan excepción
 				default:
-					throw new Exception($matches[3], $matches[2]);
-					//$response['lastError'] = ($matches[1] == 'HY000' ? $matches[2] : $matches[1]);
+					//throw new Exception($matches[3], $matches[2]);
+					throw Application::Exception('Dst005', array($matches[0]));
 			}
 		}
 		

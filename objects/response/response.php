@@ -102,8 +102,29 @@ class Response {
 	
 	public function forbidden( $message ) {
 		header("HTTP/1.1 403 Forbidden");
-		header("Location: " . Application::getInstance()->request->root);
+		//header("Location: " . Application::getInstance()->request->root);
 		print $message;
+	}
+	
+	public function error_internal( $message ) {
+		header("HTTP/1.1 500 Internal Server Error");
+		print $message;
+	}
+	
+	public function error_user( $message ) {
+		header("HTTP/1.1 501 Not Implemented");
+		print $message;
+	}
+	
+	// para errores definidos por el usuario
+	public function _throw( $message, $parts = null ) {
+		if (is_array($parts)) {
+			$message = call_user_func_array('sprintf', array_merge($message, $parts));
+		}
+		throw Application::Exception('Usr000', array($message));
+		//header("HTTP/1.1 501 Not Implemented");
+		//print $message;
+		//die();
 	}
 	
 	public function header($name, $content) {
@@ -111,9 +132,15 @@ class Response {
 	}
 	
 	function __call($method, $args) {
-		if ( $method == "print" ) {
-			if ( count($args) > 1 ) { return false; }
-			$this->_print($args[0]);
+		switch ($method) {
+			case "print":
+				if ( count($args) > 1 ) { return false; }
+				$this->_print($args[0]);
+				break;
+			case "throw":
+				if ( count($args) > 1 ) { return false; }
+				$this->_throw($args[0]);
+				break;
 		}
 	}
 }

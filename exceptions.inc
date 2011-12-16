@@ -20,6 +20,7 @@ Res001	0x0400
 
 # Session
 Ses001	0x0501	La variable de sesión solicitada no existe: %s.
+Ses004	0x0504	La sesión ha expirado.
 
 # Datastore
 Dst001	0x0601	No se ha especificado un Driver de Base de Datos.
@@ -28,6 +29,7 @@ Dst003	0x0603	No se establecieron correctamente los parámetros de conexión a la 
 Dst004	0x0604	No se pudo establecer conexión con la Base de Datos: %s.
 Dst005	0x0605	La última consulta a la Base de Datos devolvió un error: %s.
 Dst006	0x0606	No se pudo obtener el número de registros de última consulta: %s.
+Dst200	0x06C8	Error de Base de Datos: Violación de Integridad Referencial.
 
 # Controller
 Ctr001	0x0701	No se encuentra la clase correspondiente al controlador: %s.
@@ -47,5 +49,8 @@ Dob003	0x0903	El archivo cargado no contiene la clase correspondiente al objeto 
 
 # FileSystemObject
 Fso001	0x1001
+
+# User Defined
+Usr000	0xFF00	%s
 
 */ ?>

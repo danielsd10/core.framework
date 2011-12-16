@@ -174,6 +174,14 @@ final class Application {
 			'vars' => $call_parts,
 			'name' => implode("_", $call_parts)
 		));
+		
+		/* verificar si la sesión es válida, de lo contrario enviar error y se termina la ejecución */
+		/*$this->response->throw('abc');
+		if (! $this->session->valid) {
+			$this->session->message = 'Sesión ha expirado...';
+			throw self::Exception('Ses004');
+		}*/
+		
 		$this->controller->$task();
 		ob_end_flush();
 		//$this->response->output();
@@ -259,7 +267,7 @@ final class Application {
 			
 			/* clases extendidas */
 			case 'Datastore_mysql': $ClassFile = "objects/datastore/mysql/datastore.php"; break;
-			case 'sql': $ClassFile = "objects/datastore/mysql/sql.php"; break;			
+			case 'sql': $ClassFile = "objects/datastore/mysql/sql.php"; break;
 			
 			/* clases de apoyo */
 			
@@ -292,7 +300,7 @@ final class Application {
 			$count = preg_match('App255.+/', self::$exceptions, $match);
 			$line = $count>0 ? $match[0] : null;
 			$err = explode("\t", $line);
-			return new Exception($err[2]);
+			return new Exception($err[2], $err[1]);
 		}
 		
 		$err = explode("\t", $line);
@@ -301,7 +309,7 @@ final class Application {
 			$err[2] = call_user_func_array('sprintf', $params);
 		}
 		
-		return new Exception($err[2]);
+		return new Exception($err[2], $err[1]);
 	}
 	
 	/*public static function RegisterExceptions($exceptions = array()) {
@@ -310,13 +318,27 @@ final class Application {
 	
 	public static function handleException(Exception $exception) {
 		// interfaz común de salida de error
-		
-		// debug
-		if (tracing()) {
-			Trace::error($exception->getMessage());
-		} else {
-			trigger_error($exception->getMessage(), E_USER_ERROR);
+		$Application = self::getInstance();
+		switch ($exception->getCode()) {
+			case 0x0504: // Ses004
+				$Application->response->forbidden($exception->getMessage());
+				// debug
+				if (tracing()) { Trace::error($exception->getMessage()); }
+				die();
+			case 0xFF00: // Usr000
+				$Application->response->error_user($exception->getMessage());
+				// debug
+				if (tracing()) { Trace::warn($exception->getMessage()); }
+				die();
+			default:
+				$Application->response->error_internal($exception->getMessage());
+				// debug
+				if (tracing()) { Trace::error($exception->getMessage()); }
+				// incluir log de error
+				die();
 		}
+
+		//trigger_error($exception->getMessage(), E_USER_ERROR);
 	}
 	
 	public static function handleError($errno, $errstr) {
