@@ -57,19 +57,19 @@ class DataObject {
 		$values = array();
 		$properties = is_numeric($subset) ? $this->properties($subset) : $this->properties();
 		foreach ($properties as $property) {
-			switch (true) {
-				case (is_array($subset)):
-					if (! in_array($property, $subset)) { continue 2; }
-				case (is_scalar($this->$property)):
-				case (is_null($this->$property)):
-					$values[$property] = $this->$property;
-					break;
-				case ($this->$property instanceof DataObject && ! $this->$property instanceof DataObjectCollection):
-					$obj = $this->$property;
-					$key = $obj->key();
-					$values[$property] = $obj->$key;
-					break;
+			if (is_array($subset)) {
+				if (! in_array($property, $subset)) { continue; }
 			}
+			if (is_scalar($this->$property) || is_null($this->$property)) {
+				$values[$property] = $this->$property;
+			} elseif (is_object($this->$property)) {
+				/*	verificar si pripiedad es un DataObject pero no un DataObjectCollection
+			 	*	para que pueda asignar el valor de su propiedad clave */
+				if ($this->$property instanceof DataObject && ! $this->$property instanceof DataObjectCollection) {
+					$key = $this->{$property}->key();
+					$values[$property] = $this->{$property}->$key;
+				}
+			 }
 		}
 		return $values;
 	}

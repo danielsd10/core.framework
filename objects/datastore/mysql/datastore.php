@@ -99,9 +99,6 @@ class Datastore_mysql extends Datastore {
 					// integridad referencial
 					//$response['lastError'] = (int) $matches[2];
 					$response['lastError'] = 'Dst200';
-					//$Application = Application::getInstance();
-					//$Application->response->throw();
-					//echo($response['lastError']);
 					break;
 				// errores graves o no esperados generan excepción
 				default:
