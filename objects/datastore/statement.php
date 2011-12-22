@@ -128,6 +128,12 @@ final class Statement {
 		return $this;
 	}
 	
+	public function group($field) {
+		if($this->type != self::type_select) { throw new Exception(); }
+		$this->structure['group'][] = $field;
+		return $this;
+	}
+	
 	/**
 	 * ejecuta una sentencia
 	 * @return Dataset
@@ -144,6 +150,7 @@ final class Statement {
 					isset($this->structure['fields']) ? $this->structure['fields'] : null,
 					isset($this->structure['join']) ? $this->structure['join'] : null,
 					isset($this->structure['where']) ? $this->structure['where'] : null,
+					isset($this->structure['group']) ? $this->structure['group'] : null,
 					isset($this->structure['sort']) ? $this->structure['sort'] : null,
 					isset($this->structure['limit']) ? $this->structure['limit'] : null
 				);

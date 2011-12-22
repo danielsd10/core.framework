@@ -11,7 +11,7 @@ interface iSQL {
 	
 	static public function parse($value);
 	
-	static public function sel($table_name, $fields = array(), $join = array(), $where = array(), $sort = array(), $limit = array());
+	static public function sel($table_name, $fields = array(), $join = array(), $where = array(), $group = array(), $sort = array(), $limit = array());
 	static public function ins($table_name, $values = array());
 	static public function upd($table_name, $values = array(), $where = null);
 	static public function del($table_name, $where = null);

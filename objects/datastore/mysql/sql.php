@@ -45,10 +45,11 @@ abstract class sql implements iSQL {
 		}
 	}
 
-	static public function sel($table_name, $fields = array(), $join = array(), $where = array(), $sort = array(), $limit = array()) {
+	static public function sel($table_name, $fields = array(), $join = array(), $where = array(), $group = array(), $sort = array(), $limit = array()) {
 		$sql = "select " . (count($fields) == 0 ? " * " : implode(", ", $fields)) . "\nfrom " . $table_name;
 		if (is_array($join)) { $sql .= "\n" . implode("\n", $join); }
 		if (is_array($where)) { $sql .= "\nwhere " . self::cond($where, false); }
+		if (is_array($group)) { $sql .= "\ngroup by " . implode(", ", $group); }
 		if (is_array($sort)) { $sql .= "\norder by " . implode(", ", $sort); }
 		if (is_array($limit)) {
 			$limit[1] = isset($limit[1]) ? $limit[1] : 0;
