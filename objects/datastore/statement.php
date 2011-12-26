@@ -30,6 +30,7 @@ final class Statement {
 	
 	public $affectedRows;
 	public $lastID;
+	public $lastError;
 	
 	public function select($table_name, $fields = null) {
 		$this->structure['table'] = $table_name;
@@ -163,7 +164,7 @@ final class Statement {
 					isset($this->structure['values']) ? $this->structure['values'] : array()
 				);
 				$call = $Application->datastore->execute($sql);
-				if (! $call['success']) { return false; }
+				if (! $call['success']) { $this->lastError = $call['lastError']; return false; }
 				$this->affectedRows =  $call['affectedRows'];
 				$this->lastID =  $call['lastID'];
 				return true;
@@ -175,7 +176,7 @@ final class Statement {
 					isset($this->structure['where']) ? $this->structure['where'] : null
 				);
 				$call = $Application->datastore->execute($sql);
-				if (! $call['success']) { return false; }
+				if (! $call['success']) { $this->lastError = $call['lastError']; return false; }
 				$this->affectedRows =  $call['affectedRows'];
 				$this->lastID =  $call['lastID'];
 				return true;
@@ -186,7 +187,7 @@ final class Statement {
 					isset($this->structure['where']) ? $this->structure['where'] : null
 				);
 				$call = $Application->datastore->execute($sql);
-				if (! $call['success']) { return false; }
+				if (! $call['success']) { $this->lastError = $call['lastError']; return false; }
 				$this->affectedRows =  $call['affectedRows'];
 				$this->lastID =  $call['lastID'];
 				return true;
