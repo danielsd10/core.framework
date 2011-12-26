@@ -16,10 +16,6 @@ class Response {
 		return $buffer;
 	}
 	
-	private function _print( $output ) {
-		print $output;
-	}
-	
 	public function view( $view_name, $data = null ) {
 		if (tracing()) Trace::info("Cargando vista " . $view_name, 'Response');
 		$application = Application::getInstance();
@@ -30,6 +26,48 @@ class Response {
 			"view-data" => $data
 		));
 		//$view =& ob_get_contents();
+	}
+	
+	public function json( $output ) {
+		$output = $this->encode($output);
+		header('Content-Type: text/plain; charset=UTF-8');
+		print json_encode($output);
+	}
+	
+	public function file( $type, $data ) {
+		header('Content-Type: ' . $type);
+		print $data;
+	}
+	
+	public function cookie($name, $value = null, $expire = 0) {
+		switch (true) {
+			case (is_null($value)):
+				setcookie($name, null, time() - 1000);
+				break;
+			case ($expire != 0):
+				setcookie($name, $value, time() + $expire);
+				break;
+			default:
+				setcookie($name, $value);
+		}
+	}
+	
+	public function download( $filename, $type, $data ) {
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Type: ' . $type);
+		print $data;
+	}
+	
+	public function redirect( $location ) {
+		header("Location: " . $location);
+	}
+	
+	public function header($name, $content) {
+		header($name . ': ' . $content);
+	}
+	
+	private function _print( $output ) {
+		print $output;
 	}
 	
 	private function encode($subject) {
@@ -52,56 +90,6 @@ class Response {
 		default:
 			return $subject;
 		}
-	}
-	
-	public function json( $output ) {
-		$output = $this->encode($output);
-		header('Content-Type: text/plain; charset=UTF-8');
-		print json_encode($output);
-	}
-	
-	public function file() {
-		if ( file_exists($filename) ) {
-			ob_clean();
-			ob_start();
-			@readfile($filename);
-			$this->_output_buffer[] =& ob_get_clean();
-		} else {
-			return;
-		}
-	}
-	
-	public function cookie($name, $value = null, $expire = 0) {
-		switch (true) {
-			case (is_null($value)):
-				setcookie($name, null, time() - 1000);
-				break;
-			case ($expire != 0):
-				setcookie($name, $value, time() + $expire);
-				break;
-			default:
-				setcookie($name, $value);
-		}
-	}
-	
-	public function setMime() {
-		
-	}
-	
-	public function setCache() {
-		
-	}
-	
-	public function download( $filename ) {
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-	}
-	
-	public function redirect( $location ) {
-		header("Location: " . $location);
-	}
-	
-	public function header($name, $content) {
-		header($name . ': ' . $content);
 	}
 	
 	function __call($method, $args) {

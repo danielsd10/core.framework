@@ -226,11 +226,15 @@ final class Application {
 	public function library($LibraryName) {
 		$libpath = FrameworkPath.DS.'libraries/';
 		switch ($LibraryName) {
+			/* librerías */
 			case 'trace':
 				include_once( $libpath . 'trace/trace.php');
 				return Trace::getInstance();
 			case 'pdf':
 				include_once( $libpath . 'pdf/pdf.php');
+				break;
+			case 'upload':
+				include_once( $libpath . 'upload/upload.php');
 				break;
 			case 'webservice':
 			case 'excel':
@@ -271,7 +275,8 @@ final class Application {
 			case 'Number': $ClassFile = "objects/dataobject/types/number.php"; break;
 			case 'Date': $ClassFile = "objects/dataobject/types/date.php"; break;
 			
-			/* librerías */
+			/* sistema de archivos */
+			case 'File': $ClassFile = "objects/filesystem/file.php"; break;
 			
 			default:
 				throw Application::Exception('App001', array($ClassName));
@@ -312,8 +317,11 @@ final class Application {
 		// interfaz común de salida de error
 		
 		// debug
-		if (tracing()) Trace::error($exception->getMessage());
-		//trigger_error($exception->getMessage(), E_USER_ERROR);
+		if (tracing()) {
+			Trace::error($exception->getMessage());
+		} else {
+			trigger_error($exception->getMessage(), E_USER_ERROR);
+		}
 	}
 	
 	public static function handleError($errno, $errstr) {
