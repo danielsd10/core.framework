@@ -61,12 +61,12 @@ abstract class Number {
 		return $is;
 	}
 	
-	public static function lit() {
-		if ( is_null($this->number) ) { return null; }
+	public static function lit($number) {
+		if ( is_null($number) ) { return null; }
 		$i = 0;
 		$j = 0;
 
-		$tmp = sprintf("%012d", $this->number);
+		$tmp = sprintf("%012d", $number);
 		$str = "";
 
 		if ( strlen($tmp) > 12) { return ""; }

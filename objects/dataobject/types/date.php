@@ -24,6 +24,7 @@ abstract class Date {
 
 	public static function format($date, $format) {
 		if ( is_null( $date) ) { return null; }
+		if (! is_integer($date)) { $date = self::parse_date($date, self::datetime); }
 		$date = date( $format, $date );
 		if (substr_count($format, "F") > 0) {
 			$months = array( 1 => "Enero", 2 => "Febrero", 3 => "Marzo", 4 => "Abril", 5 => "Mayo", 6 => "Junio", 7 => "Julio", 8 => "Agosto", 9 => "Septiembre", 10 => "Octubre", 11 => "Noviembre", 12 => "Diciembre");
@@ -80,6 +81,7 @@ abstract class Date {
 
 	public static function diff( $date1, $date2 ) {
         if ( is_string($date2) ) { $date2 = self::parse_date( $date2 ); }
+        if ( is_string($date1) ) { $date1 = self::parse_date( $date1 ); }
         
         /*if ($date2 > $this->date) {
             $diff = $date2 - $this->date;

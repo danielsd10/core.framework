@@ -37,18 +37,16 @@ class DataObject {
 		if ($subset == 0) { return $this->_structure['properties']; }
 		$properties = array();
 		foreach ( $this->_structure['properties'] as $property ) {
-			switch (true) {
-				case ($subset & self::ignore_key && $property == $this->_structure['key']): continue 2;
-				case ($subset & self::ignore_nulls && is_object($this->$property)):
-					if ($this->$property instanceof DataObject && ! $this->$property instanceof DataObjectCollection) {
-						$obj = $this->$property;
-						$key = $obj->key();
-						if (is_null($obj->$key)) continue 2;
-					}
-				case ($subset & self::ignore_nulls && is_null($this->$property)): continue 2;
-				case ($subset & self::ignore_objects && is_object($this->$property)): continue 2;
-				default: $properties[] = $property;
+			if ($subset & self::ignore_key && $property == $this->_structure['key']) continue;
+			if ($subset & self::ignore_nulls && is_object($this->$property)) {
+				if ($this->$property instanceof DataObject && ! $this->$property instanceof DataObjectCollection) {
+					$key = $this->{$property}->key();
+					if (is_null($this->{$property}->$key)) continue;
+				}
 			}
+			if ($subset & self::ignore_nulls && is_null($this->$property)) continue;
+			if ($subset & self::ignore_objects && is_object($this->$property)) continue;
+			$properties[] = $property;
 		}
 		return $properties;
 	}
