@@ -8,7 +8,7 @@
  */
 define( 'FrameworkName', "core.framework" );
 define( 'FrameworkVersion', "1.2" );
-define( 'FrameworkRevision', 4 );
+define( 'FrameworkRevision', 5 );
 
 header( "X-Powered-By: " . "PHP/".phpversion() . "; " . FrameworkName."/".FrameworkVersion."-".FrameworkRevision );
 define( 'DS', DIRECTORY_SEPARATOR );
@@ -29,13 +29,13 @@ set_exception_handler(array('Application', 'handleException'));
 //ob_start(array('Response', 'outputBuffer'));
 
 //sesiones
-/*session_set_save_handler(
+/* session_set_save_handler(
 	array('Session', '_open'),
 	array('Session', '_close'),
 	array('Session', '_read'),
 	array('Session', '_write'),
 	array('Session', '_destroy'),
-	array('Session', '_gc'));*/
+	array('Session', '_gc')); */
 
 //cambiar directorio de trabajo para manejo de archivos
 chdir(IndexPath);

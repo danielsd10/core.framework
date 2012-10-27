@@ -28,7 +28,7 @@ abstract class String {
 	}
 
 	public static function html($string) {
-		$str = htmlentities( $string, ENT_QUOTES );
+		$str = htmlentities( $string, ENT_QUOTES, "UTF-8" );
 		$str = nl2br( $str );
 		return $str;
 	}

@@ -29,6 +29,7 @@ Dst003	0x0603	No se establecieron correctamente los parámetros de conexión a la 
 Dst004	0x0604	No se pudo establecer conexión con la Base de Datos: %s.
 Dst005	0x0605	La última consulta a la Base de Datos devolvió un error: %s.
 Dst006	0x0606	No se pudo obtener el número de registros de última consulta: %s.
+Dst007	0x0607	No existe el método en el objeto de enlace con la Base de Datos: %s.
 Dst200	0x06C8	Error de Base de Datos: Violación de Integridad Referencial.
 
 # Controller

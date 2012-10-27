@@ -29,7 +29,7 @@ class Response {
 	}
 	
 	public function json( $output ) {
-		$output = $this->encode($output);
+		//$output = $this->encode($output);
 		header('Content-Type: text/plain; charset=UTF-8');
 		print json_encode($output);
 	}
