@@ -615,6 +615,7 @@ function AcceptPageBreak()
 function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='')
 {
 	//Output a cell
+	$txt = utf8_decode($txt);
 	$k=$this->k;
 	if($this->y+$h>$this->PageBreakTrigger && !$this->InHeader && !$this->InFooter && $this->AcceptPageBreak())
 	{
