@@ -8,7 +8,7 @@
  */
 define( 'FrameworkName', "core.framework" );
 define( 'FrameworkVersion', "1.2" );
-define( 'FrameworkRevision', 5 );
+define( 'FrameworkRevision', 6 );
 
 header( "X-Powered-By: " . "PHP/".phpversion() . "; " . FrameworkName."/".FrameworkVersion."-".FrameworkRevision );
 define( 'DS', DIRECTORY_SEPARATOR );

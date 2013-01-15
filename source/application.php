@@ -244,8 +244,16 @@ final class Application {
 			case 'upload':
 				include_once( $libpath . 'upload/upload.php');
 				break;
+			case 'helpers':
+				include_once( $libpath . 'helpers/helper.php');
+				break;
 			case 'webservice':
 			case 'excel':
+				include_once( $libpath . 'excel/excel.php');
+				break;
+			case 'graphics':
+				include_once( $libpath . 'graphics/graphics.php');
+				break;
 			default: throw Application::Exception('App004', array($LibraryName));
 		}
 	}
@@ -285,6 +293,9 @@ final class Application {
 			
 			/* sistema de archivos */
 			case 'File': $ClassFile = "objects/filesystem/file.php"; break;
+			
+			/* libreria de excel */
+			case (strpos($ClassName, 'PHPExcel') == 0): return false; break;
 			
 			default:
 				throw Application::Exception('App001', array($ClassName));
