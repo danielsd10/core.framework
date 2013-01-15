@@ -105,39 +105,6 @@ final class Application {
 			// archivo ini no válido
 			throw Application::Exception('App012', array($e->getMessage()));
 		}
-		
-		/* trace/debug mode */
-		/*if ( isset($this->config['application']['trace-mode']) ) {
-			switch ($this->config['application']['trace-mode']) {
-				case "application":
-					$this->properties['traceMode'] = self::traceMode_app;
-					break;
-				case "session":
-					$this->properties['traceMode'] = self::traceMode_ses;
-					break;
-				case "off":
-				default:
-					$this->properties['traceMode'] = self::traceMode_off;
-					break;
-			}
-		}*/
-		
-		/* session mode */
-		/*if ( isset($this->config['application']['session-mode']) ) {
-			switch ($this->config['application']['session-mode']) {
-				case "application":
-					$this->properties['sessionMode'] = self::sessionMode_restrict;
-					break;
-				case "session":
-					$this->properties['sessionMode'] = self::sessionMode_loose;
-					break;
-				case "off":
-				default:
-					$this->properties['sessionMode'] = self::sessionMode_off;
-					break;
-			}
-		}*/
-		
 	}
 	
 	public function run() {
@@ -151,15 +118,6 @@ final class Application {
 		//$this->session->validate();
 		$this->session->start();
 		
-		/*if ( preg_match('/\$[0-9]+/', $this->config['application']['controllers-path']) > 0 ) {
-			preg_match_all('/\$([0-9]+)/', $this->config['application']['controllers-path'], $matches);
-			$vars = $matches[1];
-			foreach ($vars as $k => $v) {
-				if ( $v != $k + 1 ) {
-					throw new Exception();
-				}
-			}
-		}*/
 		$count_config_vars = preg_match_all('/\$[0-9]+/', $this->config['application']['controllers-path'], $matches);
 		$call = strlen($this->request->call) != 0 ? $this->request->call : $this->config['application']['default-controller'];
 		$call_parts = explode("/", trim($call, "/"));
@@ -176,8 +134,7 @@ final class Application {
 		));
 		
 		/* verificar si la sesión es válida, de lo contrario enviar error y se termina la ejecución */
-		/*$this->response->throw('abc');
-		if (! $this->session->valid) {
+		/*if (! $this->session->valid) {
 			$this->session->message = 'Sesión ha expirado...';
 			throw self::Exception('Ses004');
 		}*/
@@ -317,10 +274,6 @@ final class Application {
 		return new Exception($err[2], $err[1]);
 	}
 	
-	/*public static function RegisterExceptions($exceptions = array()) {
-		array_merge(self::$instance->exceptions, $exceptions);
-	}*/
-	
 	public static function handleException(Exception $exception) {
 		// interfaz común de salida de error
 		$Application = self::getInstance();
@@ -342,8 +295,6 @@ final class Application {
 				// incluir log de error
 				die();
 		}
-
-		//trigger_error($exception->getMessage(), E_USER_ERROR);
 	}
 	
 	public static function handleError($errno, $errstr) {
