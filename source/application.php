@@ -201,6 +201,12 @@ final class Application {
 			case 'upload':
 				include_once( $libpath . 'upload/upload.php');
 				break;
+			case 'mailer':
+				include_once( $libpath . 'mailer/mailer.php');
+				break;
+			case 'helpers':
+				include_once( $libpath . 'helpers/helper.php');
+				break;
 			case 'webservice':
 			case 'excel':
 			default: throw Application::Exception('App004', array($LibraryName));
