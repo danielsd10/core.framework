@@ -25,24 +25,24 @@ abstract class Date {
 	public static function format($date, $format) {
 		if ( is_null( $date) ) { return null; }
 		if (! is_integer($date)) { $date = self::parse_date($date, self::datetime); }
-		$date = date( $format, $date );
+		$fdate = date( $format, $date );
 		if (substr_count($format, "F") > 0) {
 			$months = array( 1 => "Enero", 2 => "Febrero", 3 => "Marzo", 4 => "Abril", 5 => "Mayo", 6 => "Junio", 7 => "Julio", 8 => "Agosto", 9 => "Septiembre", 10 => "Octubre", 11 => "Noviembre", 12 => "Diciembre");
-			$date = str_ireplace(date("F", $date), $months[date("n", $date)], $date);
+			$fdate = str_ireplace(date("F", $date), $months[date("n", $date)], $fdate);
 		}
 		if (substr_count($format, "M") > 0) {
 			$months = array( 1 => "Ene", 2 => "Feb", 3 => "Mar", 4 => "Abr", 5 => "May", 6 => "Jun", 7 => "Jul", 8 => "Ago", 9 => "Sep", 10 => "Oct", 11 => "Nov", 12 => "Dic");
-			$date = str_ireplace(date("M", $date), $months[date("n", $date)], $date);
+			$fdate = str_ireplace(date("M", $date), $months[date("n", $date)], $fdate);
 		}
 		if (substr_count($format, "l") > 0) {
 			$days = array( 0 => "Domingo", 1 => "Lunes", 2 => "Martes", 3 => "Miércoles", 4 => "Jueves", 5 => "Viernes", 6 => "Sábado");
-			$date = str_ireplace(date("l", $date), $days[date("w", $date)], $date);
+			$fdate = str_ireplace(date("l", $date), $days[date("w", $date)], $fdate);
 		}
 		if (substr_count($format, "D") > 0) {
 			$days = array( 0 => "Dom", 1 => "Lun", 2 => "Mar", 3 => "Mié", 4 => "Jue", 5 => "Vie", 6 => "Sáb");
-			$date = str_ireplace(date("D", $date), $days[date("w", $date)], $date);
+			$fdate = str_ireplace(date("D", $date), $days[date("w", $date)], $fdate);
 		}
-		return $date;
+		return $fdate;
 	}
 
 	public static function fdate($date) {
