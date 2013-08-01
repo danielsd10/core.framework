@@ -13,7 +13,7 @@ App255	0x01FF	Error desconocido de la Aplicación.
 Ldr001	0x0201	No se encuentra el archivo especificado: (%s).
 
 # Request
-Req255	0x03FF
+Req001	0x0301	La propiedad '%s' no se encuentra especificada en la solicitud.
 
 # Response
 Res001	0x0400

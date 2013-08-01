@@ -52,8 +52,16 @@ class Request {
 	}
 	
 	private function getCall() {
-		return str_replace($this->getRoot(), "", trim(
-				str_replace($_SERVER['QUERY_STRING'], "", $_SERVER['REQUEST_URI']), "?") );
+		// quitar la parte del query string de la URL: ?var=...
+		$call = trim(str_replace($_SERVER['QUERY_STRING'], "", $_SERVER['REQUEST_URI']), "?");
+		if ($this->getRoot() == "/") {
+			// si la aplicación se encuentra en la raiz del sitio, quitar el primer /
+			$call = ltrim($call, "/");
+		} else  {
+			// si la raíz de la aplicación es una subcarpeta, quitarla
+			$call = str_replace($this->getRoot(), "", $call);
+		}
+		return $call;
 	}
 	
 	private function getData() {
@@ -63,12 +71,12 @@ class Request {
 	public function __get($property) {
 		if ( array_key_exists($property, $this->structure) ) { return $this->structure[$property]; }
 		elseif ( array_key_exists($property, $this->structure['data']) ) { return $this->structure['data'][$property]; }
-		else { throw new Exception(); }
+		else { throw Application::Exception('Req001', array($property)); }
 	}
 	
 	public function __set($property, $value) {
 		if (! array_key_exists($property, $this->structure['data']) ) {
-			throw new Exception();
+			throw Application::Exception('Req001', array($property));
 		} else {
 			$this->structure['data'][$property] = $value;
 		}
