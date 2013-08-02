@@ -119,11 +119,11 @@ final class Statement {
 	
 	public function limit($count, $offset = null, $type = self::limit_skip) {
 		if($this->type != self::type_select) { throw new Exception(); }
-		$this->structure['limit'][0] = $count;
+		$this->structure['limit'][1] = $count;
 		if (! is_null($offset) ) {
 			switch ($type) {
-				case self::limit_skip: $this->structure['limit'][1] = $offset; break;
-				case self::limit_page: $this->structure['limit'][1] = $count * ($offset - 1); break;
+				case self::limit_skip: $this->structure['limit'][0] = $offset; break;
+				case self::limit_page: $this->structure['limit'][0] = $count * ($offset - 1); break;
 			}
 		}
 		return $this;
