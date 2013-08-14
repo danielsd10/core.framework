@@ -15,9 +15,9 @@ class Model {
 	
 	public function paging($page, $items_page, $total_items) {
 		$this->paging = new stdClass;
-		$this->paging->page = $page;
-		$this->paging->items_page = $items_page;
-		$this->paging->total_items = $total_items;
+		$this->paging->page = (int) $page;
+		$this->paging->items_page = (int) $items_page;
+		$this->paging->total_items = (int) $total_items;
 		$total_pages = ceil($total_items / $items_page);
 		//$total_page_items = ($page < $total_pages) ? $items_page : ($mod == 0 ? $items_page : $mod);
 		switch (true) {
@@ -81,7 +81,6 @@ class Model {
 	 * delete_{algo} para eliminar datos
 	 */
 	
-	/** @todo resolver envio de parametros */
 	public function __call($function, $params = array()) {
 		switch ($function) {
 			case 'create':
@@ -94,11 +93,13 @@ class Model {
 				call_user_func(array($this, $function));
 				break;
 			case 'param':
+				$this->_params($params[0], $params[1]);
+				break;
 			case 'params':
 				$this->_params($params[0]);
 				break;
 			default:
-				throw new Exception('método no existe');
+				throw Application::Exception('Mod003', array(get_class($this), $function));
 				break;
 		}
 		
