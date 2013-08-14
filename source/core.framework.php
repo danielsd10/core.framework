@@ -7,7 +7,7 @@
  * @version 1.2
  */
 define( 'FrameworkName', "core.framework" );
-define( 'FrameworkVersion', "1.2" );
+define( 'FrameworkVersion', "1.2-web" );
 define( 'FrameworkRevision', 5 );
 
 header( "X-Powered-By: " . "PHP/".phpversion() . "; " . FrameworkName."/".FrameworkVersion."-".FrameworkRevision );
@@ -50,4 +50,5 @@ function tracing() { return Application::getInstance()->traceMode; }
 
 $f = Application::getInstance();
 $f->traceMode = Application::traceMode_off;
+$w = new stdClass(); // variable con información relacionada al sitio web
 ?>

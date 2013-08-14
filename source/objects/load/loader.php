@@ -2,7 +2,7 @@
 /**
  * Clase cargadora de objetos del Framework
  * @name Loader
- * @version 1.3
+ * @version 1.2
  */
 class Loader {
 	

@@ -5,38 +5,53 @@
  * @version 1.2
  */
 class Response {
-	//private $buffer;
+	private $buffer;
+	public $sended = false;
 	
-	public function __construct() {
-		ob_clean();
-		ob_start(array($this, "outputBuffer"));
+	public function buffer($section_id) {
+		return isset($this->buffer[$section_id]) ? $this->buffer[$section_id] : false;
 	}
 	
-	public function outputBuffer($buffer) {
-		return $buffer;
+	public function module($module_type, $section_id, $data = null) {
+		if (tracing()) Trace::info("Cargando módulo " . $module_type, 'Response');
+		$module = new Module($module_type, $data);
+		$this->buffer[$section_id][] = $module;
 	}
 	
-	public function view( $view_name, $data = null ) {
-		if (tracing()) Trace::info("Cargando vista " . $view_name, 'Response');
+	public function view($view_type, $data = null) {
+		if (tracing()) Trace::info("Cargando vista " . $view_type, 'Response');
+		$view = new View($view_type, $data);
+		if ($this->sended) {
+			echo $view;
+		} else {
+			$this->buffer['view'] = $view;
+		}
+	}
+	
+	public function template($template_name) {
+		if (tracing()) Trace::info("Cargando plantilla " . $template_name, 'Response');
 		$application = Application::getInstance();
-		$view_parts = explode("/", trim($view_name, "/"));
+		$view_parts = explode("/", trim($template_name, "/"));
+		$data = $this->buffer;
+		header('Content-Type: text/html; charset=UTF-8');
 		$application->load->view( array(
-			"config-path" => $application->config("application", "views-path"),
+			"config-path" => $application->config("application", "templates-path"),
 			"view-parts" => $view_parts,
 			"view-data" => $data
 		));
-		//$view =& ob_get_contents();
+		$this->sended = true;
 	}
 	
 	public function json( $output ) {
-		//$output = $this->encode($output);
 		header('Content-Type: text/plain; charset=UTF-8');
 		print json_encode($output);
+		$this->sended = true;
 	}
 	
 	public function file( $type, $data ) {
 		header('Content-Type: ' . $type);
 		print $data;
+		$this->sended = true;
 	}
 	
 	public function cookie($name, $value = null, $expire = 0) {
@@ -56,6 +71,7 @@ class Response {
 		header('Content-Disposition: attachment; filename="' . $filename . '"');
 		header('Content-Type: ' . $type);
 		print $data;
+		$this->sended = true;
 	}
 	
 	public function redirect( $location ) {

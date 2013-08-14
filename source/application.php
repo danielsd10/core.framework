@@ -118,21 +118,22 @@ final class Application {
 		//$this->session->validate();
 		$this->session->start();
 		
-		$count_config_vars = preg_match_all('/\$[0-9]+/', $this->config['application']['controllers-path'], $matches);
-		$call = strlen($this->request->call) != 0 ? $this->request->call : $this->config['application']['default-controller'];
-		$call_parts = explode("/", trim($call, "/"));
-		if ( count($call_parts) <= $count_config_vars ) {
-			$task = "index";
-			//$name = str_replace("/", "_", $this->request->call);
-		} else {
-			$task = array_pop($call_parts);
-		}
+		/*
+		 * variación de ejecución de controlador para sitio web
+		 * ejecutará el controlador por defecto que se encargará de:
+		 * - realizar interpretación de links,
+		 * - carga de aplicación principal
+		 * - cargar de módulos
+		 */
+		
+		$call_parts = explode("/", $this->config['application']['default-controller']);
+		$controller = $call_parts[0];
+		$task = $call_parts[1];
 		$this->controller = $this->load->controller( array(
 			'config-path' => $this->config['application']['controllers-path'],
-			'vars' => $call_parts,
-			'name' => implode("_", $call_parts)
-		));
-		
+			'vars' => array($controller),
+			'name' => $controller
+		));		
 		/* verificar si la sesión es válida, de lo contrario enviar error y se termina la ejecución */
 		/*if (! $this->session->valid) {
 			$this->session->message = 'Sesión ha expirado...';
@@ -172,6 +173,19 @@ final class Application {
 			'config-path' => $this->config['application']['dataobjects-path'],
 			'vars' => $vars,
 			'name' => $name
+		));
+	}
+	
+	/*
+	 * variación de carga de objeto / componente para sitio web
+	 * cargará el archivo relacionado al objeto
+	 */
+	public function object($ObjectName) {
+		$vars = explode("/", trim($ObjectName, "/"));
+		$this->load->object(array(
+			'config-path' => $this->config['application']['objects-path'],
+			'vars' => $vars,
+			'name' => "*"
 		));
 	}
 	
@@ -233,8 +247,8 @@ final class Application {
 			case 'DataObjectCollection': $ClassFile = "objects/dataobject/collection.php"; break;
 			
 			/* clases extendidas */
-			case 'Datastore_mysql': $ClassFile = "objects/datastore/mysql/datastore.php"; break;
-			case 'sql': $ClassFile = "objects/datastore/mysql/sql.php"; break;
+			case 'Module': $ClassFile = "objects/response/module.php"; break;
+			case 'View': $ClassFile = "objects/response/view.php"; break;
 			
 			/* clases de apoyo */
 			
